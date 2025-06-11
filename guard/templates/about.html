@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block title%}About{%endblock%}
+{%block content%}
+<!-- about section -->
+<section class="about_section mt-5 layout_padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 px-0">
+        <div class="img_container">
+          <div class="img-box">
+            <img src="{% static 'images/about-img.jpg'%}" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 px-0">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2>Who Are We?</h2>
+          </div>
+          <p>
+            We are a professional security services company committed to
+            protecting people, property, and peace of mind. With a team of
+            trained guards and advanced technology, we provide customized
+            solutions that ensure safety and trust at every level.
+          </p>
+          <div class="btn-box">
+            <a href=""> Read More </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end about section -->
+{%endblock%}

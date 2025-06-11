@@ -1,0 +1,77 @@
+{%extends 'base.html'%} {%load static%} {%block title%}Contact{%endblock%}
+{%block content%}
+<!-- contact section -->
+<section class="contact_section layout_padding">
+  <div class="contact_bg_box">
+    <div class="img-box">
+      <img src="{%static 'images/contact-bg.jpg'%}" alt="" />
+    </div>
+  </div>
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>Get In touch</h2>
+    </div>
+    <div class="">
+      <div class="row">
+        <div class="col-md-7 mx-auto">
+          <form method="post" action="{%url 'contact'%}">
+            {% if messages %}
+            <div class="container mt-3">
+              {% for message in messages %}
+              <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                ></button>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %} {% csrf_token %}
+            <div class="contact_form-container">
+              <div>
+                <div>
+                  <input
+                    type="text"
+                    name="full_name"
+                    placeholder="Full Name"
+                    required
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+                <div>
+                  <input type="text" name="phone" placeholder="Phone Number" />
+                </div>
+                <div class="">
+                  <textarea
+                    name="message"
+                    placeholder="Message"
+                    class="message_input"
+                    required
+                  ></textarea>
+                </div>
+                <div class="btn-box">
+                  <button type="submit">Send</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end contact section -->
+{%endblock%}
