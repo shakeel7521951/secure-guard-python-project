@@ -11,10 +11,10 @@ class User(AbstractUser):
 
 # Guard model
 class Guard(models.Model):
-    name = models.CharField(max_length=30)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     experience = models.IntegerField(default=0)
     skills = models.TextField()
-    guardImage = models.ImageField(null=True)
+    guardImage = models.ImageField(upload_to='guards/', null=True, blank=True)
     availability_status = models.CharField(
         max_length=20,
         choices=[('Available', 'Available'), ('Unavailable', 'Unavailable')],
@@ -22,7 +22,7 @@ class Guard(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.user.first_name or self.user.email
 
 # Service model
 class Service(models.Model):
@@ -50,7 +50,7 @@ class Booking(models.Model):
     booking_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
 
     def __str__(self):
-        return f"{self.user.name} - {self.guard.name} on {self.booking_date}"
+        return self.user.first_name or self.user.email
 
 
 class Contact(models.Model):

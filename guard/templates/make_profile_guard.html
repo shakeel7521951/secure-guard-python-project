@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Toast Messages -->
+{% if messages %}
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+    {% for message in messages %}
+    <div class="toast align-items-center text-white 
+        {% if message.tags == 'error' %} bg-danger {% else %} bg-{{ message.tags }} {% endif %}
+        border-0 fade show"
+        role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ message }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Guard Profile Form -->
+<div class="container d-flex justify-content-center align-items-center my-4 min-vh-100">
+  <div class="card shadow p-4 rounded" style="width: 100%; max-width: 600px;">
+    <h2 class="text-center mb-4">
+      {% if guard %}Update{% else %}Create{% endif %} Guard Profile
+    </h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="experience" class="form-label">Experience (in years)</label>
+        <input type="number" class="form-control" name="experience" id="experience" min="0" required
+               value="{{ guard.experience|default:'' }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="skills" class="form-label">Skills</label>
+        <textarea class="form-control" name="skills" id="skills" rows="3" required>{{ guard.skills|default:'' }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="guardImage" class="form-label">Profile Image</label>
+        <input type="file" class="form-control" name="guardImage" id="guardImage">
+        {% if guard and guard.image %}
+          <img src="{{ guard.image.url }}" alt="Guard Image" class="mt-2 rounded" style="max-width: 100px;">
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="availability_status" class="form-label">Availability</label>
+        <select class="form-select" name="availability_status" id="availability_status">
+          <option value="Available" {% if guard.availability_status == "Available" %}selected{% endif %}>Available</option>
+          <option value="Unavailable" {% if guard.availability_status == "Unavailable" %}selected{% endif %}>Unavailable</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">
+        {% if guard %}Update{% else %}Create{% endif %} Guard Profile
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -123,7 +123,11 @@
         aria-expanded="false"
         style="width: 40px; height: 40px; font-weight: bold;"
       >
+        {% if user.first_name %}
         {{ user.first_name|slice:":1"|upper }}
+        {% else %}
+        {{ user.username|slice:":1"|upper }}
+        {% endif %}
       </button>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
         <li><a class="dropdown-item" href="{%url 'myProfile'%}">My Profile</a></li>

@@ -55,7 +55,6 @@ def signup(request):
         name = request.POST.get('name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
-        address = request.POST.get('address')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         
@@ -65,12 +64,11 @@ def signup(request):
         if User.objects.filter(email=email).exists():
             messages.error(request,'Email already exists.')
             return redirect('signup')
-        user = User.objects.create(
+        User.objects.create(
             username = email,
             email = email,
             first_name = name,
             phone = phone,
-            address = address,
             password = make_password(password)
         )
         messages.success(request,'Account created successfully.Please login.')
@@ -132,3 +130,37 @@ def contact_view(request):
             return redirect('contact')
 
     return render(request, "contact.html")
+
+@login_required
+def make_guard_profile(request):
+    guard = getattr(request.user, 'guard', None)
+
+    if request.method == 'POST':
+        skills = request.POST.get('skills')
+        experience = request.POST.get('experience')
+        availability = request.POST.get('availability_status')
+        image = request.FILES.get('guardImage')
+
+        if guard:
+            # Update existing profile
+            guard.skills = skills
+            guard.experience = experience
+            guard.availability_status = availability
+            if image:
+                guard.guardImage = image
+            guard.save()
+            messages.success(request, 'Guard profile updated successfully.')
+        else:
+            # Create new profile
+            guard = Guard.objects.create(
+                user=request.user,
+                skills=skills,
+                experience=experience,
+                availability_status=availability,
+                guardImage=image
+            )
+            messages.success(request, 'Guard profile created successfully.')
+
+        return redirect('myProfile')  # Replace with your actual profile view name
+
+    return render(request, 'make_profile_guard.html', {'guard': guard})

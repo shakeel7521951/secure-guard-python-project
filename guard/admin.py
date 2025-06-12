@@ -7,9 +7,12 @@ class AdminUser(admin.ModelAdmin):
     list_filter = ('is_staff', 'is_active')
 
 class AdminGuard(admin.ModelAdmin):
-    list_display = ('name', 'experience', 'availability_status')
+    list_display = ('get_name', 'experience', 'availability_status')
     search_fields = ('name',)
     list_filter = ('availability_status',)
+    
+    def get_name(self, obj):
+        return obj.user.first_name or obj.user.email
 
 class AdminService(admin.ModelAdmin):
     list_display = ('service_name',)

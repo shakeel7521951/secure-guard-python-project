@@ -1,23 +1,58 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <div class="container my-5">
-  <div class="card mx-auto" style="max-width: 400px;">
+  <div class="card mx-auto" style="max-width: 400px">
     <div class="card-body text-center">
-      {% if user.profile.image %}
-        <!-- Show profile image if available -->
-        <img src="{{ user.profile.image.url }}" alt="Profile Image" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+      <!-- Display Guard Image > Profile Image > Initial -->
+      {% if user.guard.guardImage %}
+      <img
+        src="{{ user.guard.guardImage.url }}"
+        alt="Guard Image"
+        class="rounded-circle mb-3"
+        style="width: 120px; height: 120px; object-fit: cover"
+      />
+      {% elif user.profile.image %}
+      <img
+        src="{{ user.profile.image.url }}"
+        alt="Profile Image"
+        class="rounded-circle mb-3"
+        style="width: 120px; height: 120px; object-fit: cover"
+      />
       {% else %}
-        <!-- Show first letter of user's first name in a circle -->
-        <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 60px; font-weight: 700;">
-          {{ user.first_name|default:user.username|slice:":1"|upper }}
-        </div>
+      <div
+        class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
+        style="width: 120px; height: 120px; font-size: 60px; font-weight: 700"
+      >
+        {{ user.first_name|default:user.username|slice:":1"|upper }}
+      </div>
       {% endif %}
 
+      <!-- Display Basic Info -->
       <h3 class="card-title">{{ user.get_full_name|default:user.username }}</h3>
       <p class="text-muted mb-1"><strong>Email:</strong> {{ user.email }}</p>
-      <p class="text-muted"><strong>Phone:</strong> {{ user.phone|default:"Not provided" }}</p>
+      <p class="text-muted">
+        <strong>Phone:</strong> {{ user.phone|default:"Not provided" }}
+      </p>
+
+      <!-- Guard Info Section -->
+      {% if user.guard %}
+      <p class="text-success mt-3">You have registered as a guard.</p>
+      <p class="text-muted mb-1">
+        <strong>Experience:</strong> {{ user.guard.experience }} years
+      </p>
+      <p class="text-muted mb-1">
+        <strong>Skills:</strong> {{ user.guard.skills }}
+      </p>
+      <p class="text-muted mb-1">
+        <strong>Availability:</strong> {{ user.guard.availability_status }}
+      </p>
+      <a href="{% url 'make_guard' %}" class="btn btn-primary mt-3"
+        >Edit Guard Profile</a
+      >
+      {% else %}
+      <a href="{% url 'make_guard' %}" class="btn btn-outline-primary mt-3"
+        >Make Profile as Guard</a
+      >
+      {% endif %}
     </div>
   </div>
 </div>
