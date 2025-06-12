@@ -9,7 +9,6 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('services/', views.services, name='services'),
     path('guards/', views.guard_list, name="guards"),
-    path('contact/', views.contact, name='contact'),
     path('book-now/',views.book_service,name="book_now"),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup, name='signup'),

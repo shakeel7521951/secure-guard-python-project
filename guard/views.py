@@ -17,8 +17,25 @@ def about(request):
     return render(request,'about.html')
 def services(request):
     return render(request,'services.html')
-def contact(request):
-    return render(request,'contact.html')
+def contact_view(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+        if full_name and email and message:
+            Contact.objects.create(
+                full_name=full_name,
+                email=email,
+                phone=phone,
+                message=message
+            )
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect('contact')
+        else:
+            messages.error(request, "Please fill in all required fields.")
+
+    return render(request, 'contact.html')
 
 def login_view(request):
     if request.method == 'POST':
