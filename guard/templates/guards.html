@@ -25,7 +25,7 @@
                 <img src="{% static 'images/default_guard.jpg' %}" alt="Default" class="rounded-circle shadow" style="height: 150px; width: 150px; object-fit: cover;">
               {% endif %}
             </div>
-            <h5 class="card-title mb-1">{{ guard.name }}</h5>
+            <h5 class="card-title mb-1">{{ guard.user.get_full_name  }}</h5>
             <p class="text-muted mb-2">{{ guard.experience }} Years Experience</p>
             <p><strong>Skills:</strong> {{ guard.skills }}</p>
             <p><strong>Status:</strong> 

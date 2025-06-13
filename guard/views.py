@@ -17,25 +17,6 @@ def about(request):
     return render(request,'about.html')
 def services(request):
     return render(request,'services.html')
-def contact_view(request):
-    if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        if full_name and email and message:
-            Contact.objects.create(
-                full_name=full_name,
-                email=email,
-                phone=phone,
-                message=message
-            )
-            messages.success(request, "Your message has been sent successfully!")
-            return redirect('contact')
-        else:
-            messages.error(request, "Please fill in all required fields.")
-
-    return render(request, 'contact.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -91,20 +72,32 @@ def services(request):
 def book_service(request):
     services = Service.objects.all()
     guards = Guard.objects.filter(availability_status='Available')
+    
     if request.method == 'POST':
         service_id = request.POST.get('service')
         guard_id = request.POST.get('guard')
         booking_date = request.POST.get('booking_date')
         booking_time = request.POST.get('booking_time')
+
+        # Retrieve the actual instances of Service and Guard
+        service = Service.objects.get(id=service_id)
+        guard = Guard.objects.get(id=guard_id)
+
+        # Create the booking with the actual instances, not just IDs
         Booking.objects.create(
-            user = request.user,
-            guard = guard_id,
-            service = service_id,
-            booking_date = booking_date,
-            booking_time = booking_time
+            user=request.user,
+            guard=guard,
+            service=service,
+            booking_date=booking_date,
+            booking_time=booking_time
         )
-        return HttpResponse("Booking successfull")
-    return render(request,'bookNow.html',{'services':services,'guards':guards})
+
+        # Add a success message
+        messages.success(request, "Booking successful")
+
+        return redirect('user_bookings')
+
+    return render(request, 'bookNow.html', {'services': services, 'guards': guards})
 
 def contact_view(request):
     if request.method == "POST":
@@ -113,8 +106,6 @@ def contact_view(request):
         phone = request.POST.get('phone')
         message = request.POST.get('message')
 
-        print("POST DATA:", full_name, email, phone, message)
-
         if full_name and email and message:
             contact = Contact.objects.create(
                 full_name=full_name,
@@ -122,7 +113,6 @@ def contact_view(request):
                 phone=phone,
                 message=message
             )
-            print("Saved:", contact.id)
             messages.success(request, "Your message has been sent successfully.")
             return redirect('contact')
         else:
@@ -130,6 +120,11 @@ def contact_view(request):
             return redirect('contact')
 
     return render(request, "contact.html")
+
+@login_required(login_url='login')
+def user_bookings(request):
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'userBookings.html', {'userBookings': bookings})
 
 @login_required
 def make_guard_profile(request):
@@ -142,7 +137,6 @@ def make_guard_profile(request):
         image = request.FILES.get('guardImage')
 
         if guard:
-            # Update existing profile
             guard.skills = skills
             guard.experience = experience
             guard.availability_status = availability
@@ -151,7 +145,6 @@ def make_guard_profile(request):
             guard.save()
             messages.success(request, 'Guard profile updated successfully.')
         else:
-            # Create new profile
             guard = Guard.objects.create(
                 user=request.user,
                 skills=skills,
@@ -160,7 +153,5 @@ def make_guard_profile(request):
                 guardImage=image
             )
             messages.success(request, 'Guard profile created successfully.')
-
-        return redirect('myProfile')  # Replace with your actual profile view name
-
+        return redirect('myProfile')
     return render(request, 'make_profile_guard.html', {'guard': guard})

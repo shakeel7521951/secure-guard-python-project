@@ -132,7 +132,11 @@
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
         <li><a class="dropdown-item" href="{%url 'myProfile'%}">My Profile</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+               {% if user.is_authenticated and not user.guard %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_bookings' %}">My Bookings</a>
+                    </li>
+                    {% endif %}        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
       </ul>
     </div>
   {% else %}

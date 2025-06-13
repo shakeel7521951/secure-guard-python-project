@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Bookings</h2>
+    
+    {% if userBookings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Booking Date</th>
+                    <th scope="col">Booking Time</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">Guard</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in userBookings %}
+                <tr>
+                    <td>{{ booking.booking_date }}</td>
+                    <td>{{ booking.booking_time }}</td>
+                    <td>{{ booking.service.service_name }}</td>
+                    <td>{{ booking.guard.user.first_name }} {{ booking.guard.user.last_name }}</td>
+                    <td>
+                        {% if booking.booking_status == 'Pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                        {% elif booking.booking_status == 'Confirmed' %}
+                            <span class="badge bg-success">Confirmed</span>
+                        {% elif booking.booking_status == 'Cancelled' %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% elif booking.booking_status == 'Completed' %}
+                            <span class="badge bg-info">Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</div>
+{% endblock %}

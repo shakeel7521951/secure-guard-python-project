@@ -30,7 +30,7 @@
               <select name="guard" id="guard" class="form-select" required>
                 <option value="" selected disabled>Choose a guard</option>
                 {% for guard in guards %}
-                <option value="{{ guard.id }}">{{ guard.name }} ({{ guard.experience }} yrs)</option>
+                <option value="{{ guard.id }}">{{ guard.user.get_full_name  }} ({{ guard.experience }} yrs)</option>
                 {% endfor %}
               </select>
             </div>
